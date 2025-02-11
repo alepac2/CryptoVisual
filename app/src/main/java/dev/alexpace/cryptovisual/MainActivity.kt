@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     //! TEST & TEMPORARY
     private lateinit var db: AppDatabase
     private lateinit var cryptoRepository: CryptoRepository
+    private val dbName = "cryptos.db"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     private fun initRepository() {
         db = Room.databaseBuilder(
             applicationContext,
-            AppDatabase::class.java, "database-name"
+            AppDatabase::class.java, dbName
         ).build()
 
         cryptoRepository = CryptoRepository(db)
