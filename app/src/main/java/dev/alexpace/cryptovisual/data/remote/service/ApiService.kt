@@ -1,6 +1,6 @@
-package dev.alexpace.cryptovisual.data.remote
+package dev.alexpace.cryptovisual.data.remote.service
 
-import dev.alexpace.cryptovisual.data.models.Crypto
+import dev.alexpace.cryptovisual.data.remote.models.Crypto
 import retrofit2.http.GET
 import retrofit2.http.Query
 

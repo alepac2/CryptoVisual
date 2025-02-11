@@ -1,4 +1,4 @@
-package dev.alexpace.cryptovisual.data.remote
+package dev.alexpace.cryptovisual.data.remote.client
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

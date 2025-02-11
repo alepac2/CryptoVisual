@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                     cryptoRepository.getCryptos()
                 }
                 cryptos.forEach {
-                    Log.d("MainActivity", "Crypto: ${it.name}, Price: ${it.currentPrice}, Image: ${it.image}")
+                    Log.d("MainActivity", "Crypto: ID: ${it.id}, Symbol: ${it.symbol}, Name: ${it.name}, Price: ${it.currentPrice}, Image: ${it.image}")
                 }
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error fetching data: ${e.message}")

@@ -1,4 +1,4 @@
-package dev.alexpace.cryptovisual.data.models
+package dev.alexpace.cryptovisual.data.remote.models
 
 import com.squareup.moshi.Json
 
