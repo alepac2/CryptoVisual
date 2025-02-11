@@ -2,7 +2,7 @@ package dev.alexpace.cryptovisual.data.remote.models
 
 import com.squareup.moshi.Json
 
-data class Crypto(
+data class CryptoResponse(
     val id: String,
     val symbol: String,
     val name: String,

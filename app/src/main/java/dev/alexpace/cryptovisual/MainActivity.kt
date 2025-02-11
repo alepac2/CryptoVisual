@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
 import dev.alexpace.cryptovisual.data.CryptoRepository
+import dev.alexpace.cryptovisual.data.local.db.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -15,7 +17,8 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity() {
 
     //! TEST & TEMPORARY
-    private val cryptoRepository = CryptoRepository()
+    private lateinit var db: AppDatabase
+    private lateinit var cryptoRepository: CryptoRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,20 +36,30 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private fun initRepository() {
+        db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java, "database-name"
+        ).build()
 
+        cryptoRepository = CryptoRepository(db)
+    }
 
     //! TEST & TEMPORARY
     private fun testApiCall() {
+
+        initRepository()
+
         lifecycleScope.launch {
             try {
                 val cryptos = withContext(Dispatchers.IO) {
                     cryptoRepository.getCryptos()
                 }
                 cryptos.forEach {
-                    Log.d("MainActivity", "Crypto: ID: ${it.id}, Symbol: ${it.symbol}, Name: ${it.name}, Price: ${it.currentPrice}, Image: ${it.image}")
+                    Log.d("MainDebug", "Crypto: ID: ${it.id}, Symbol: ${it.symbol}, Name: ${it.name}, Price: ${it.currentPrice}, Image: ${it.image}")
                 }
             } catch (e: Exception) {
-                Log.e("MainActivity", "Error fetching data: ${e.message}")
+                Log.e("MainDebug", "Error fetching data: ${e.message}")
             }
         }
     }

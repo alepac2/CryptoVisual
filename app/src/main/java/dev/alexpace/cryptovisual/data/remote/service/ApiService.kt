@@ -1,6 +1,6 @@
 package dev.alexpace.cryptovisual.data.remote.service
 
-import dev.alexpace.cryptovisual.data.remote.models.Crypto
+import dev.alexpace.cryptovisual.data.remote.models.CryptoResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,5 +12,5 @@ interface ApiService {
         @Query("per_page") perPage: Int = 250,
         @Query("page") page: Int = 1,
         @Query("sparkline") sparkline: Boolean = false
-    ): List<Crypto>
+    ): List<CryptoResponse>
 }
