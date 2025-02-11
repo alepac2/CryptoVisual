@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
+    //! TEST & TEMPORARY
     private val cryptoRepository = CryptoRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {

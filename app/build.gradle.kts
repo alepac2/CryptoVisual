@@ -9,6 +9,10 @@ android {
     namespace = "dev.alexpace.cryptovisual"
     compileSdk = 35
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "dev.alexpace.cryptovisual"
         minSdk = 26
