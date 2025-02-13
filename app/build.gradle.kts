@@ -55,6 +55,7 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
     // Retrofit & Moshi
     implementation(libs.retrofit)
@@ -65,6 +66,10 @@ dependencies {
     runtimeOnly(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    // Glide
+    implementation(libs.glide)
+    ksp(libs.compiler)
 
 
 }
