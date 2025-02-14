@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/crypto_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:scaleType="centerCrop"
             android:contentDescription="Crypto Image"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +31,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textColor="@android:color/black"
             app:layout_constraintStart_toEndOf="@id/crypto_image"
             app:layout_constraintTop_toTopOf="@id/crypto_image"
@@ -43,7 +43,7 @@
             android:id="@+id/crypto_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="28dp"
             android:paddingStart="12dp"
             android:textColor="@android:color/holo_green_dark"
             android:textSize="16sp"
