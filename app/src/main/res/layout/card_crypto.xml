@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="6dp">
@@ -15,43 +15,63 @@
 
         <ImageView
             android:id="@+id/crypto_image"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:scaleType="centerCrop"
+            android:layout_width="124dp"
+            android:layout_height="123dp"
+            android:background="@drawable/rounded_image_bg"
             android:contentDescription="Crypto Image"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.5"
-            android:background="@drawable/rounded_image_bg"
             tools:src="@tools:sample/avatars" />
 
         <TextView
             android:id="@+id/crypto_symbol"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="16sp"
+            android:layout_marginStart="12dp"
             android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/crypto_image"
             app:layout_constraintTop_toTopOf="@id/crypto_image"
             app:layout_constraintEnd_toEndOf="parent"
-            android:paddingStart="12dp"
             tools:text="BTC" />
+
+        <TextView
+            android:id="@+id/crypto_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Bitcoin"
+            app:layout_constraintStart_toStartOf="@id/crypto_symbol"
+            app:layout_constraintTop_toBottomOf="@id/crypto_symbol"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Bitcoin" />
 
         <TextView
             android:id="@+id/crypto_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:paddingStart="12dp"
+            android:layout_marginTop="8dp"
             android:textColor="@android:color/holo_green_dark"
             android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@id/crypto_symbol"
+            app:layout_constraintTop_toBottomOf="@id/crypto_name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@id/crypto_image"
-            app:layout_constraintTop_toBottomOf="@id/crypto_symbol"
             tools:text="$43,500.00" />
+
+        <TextView
+            android:id="@+id/crypto_total_volume"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@id/crypto_symbol"
+            app:layout_constraintTop_toBottomOf="@id/crypto_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Total Volume: 1.2M" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
