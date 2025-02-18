@@ -42,11 +42,13 @@ class CryptoListFragment : Fragment() {
 
         binding.cryptoList.adapter = cryptoAdapter
 
-        viewModel.fetchCryptos()
+        if (viewModel.cryptos.value.isNullOrEmpty()) {
+            viewModel.fetchCryptos()
 
-        viewModel.cryptos.observe(viewLifecycleOwner, Observer { cryptos ->
-            cryptoAdapter.addCryptos(cryptos)
-        })
+            viewModel.cryptos.observe(viewLifecycleOwner, Observer { cryptos ->
+                cryptoAdapter.addCryptos(cryptos)
+            })
+        }
 
         viewModel.error.observe(viewLifecycleOwner, Observer { error ->
             if (error!!.isNotEmpty()) {
