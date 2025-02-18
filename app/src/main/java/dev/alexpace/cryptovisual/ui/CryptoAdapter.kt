@@ -3,11 +3,13 @@ package dev.alexpace.cryptovisual.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import dev.alexpace.cryptovisual.R
 import dev.alexpace.cryptovisual.databinding.CardCryptoBinding
 import dev.alexpace.cryptovisual.domain.models.Crypto
+import dev.alexpace.cryptovisual.ui.fragments.CryptoListFragmentDirections
 
 class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
 
@@ -48,6 +50,11 @@ class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
                 .placeholder(R.drawable.ic_launcher_background)
                 .centerCrop()
                 .into(cryptoImage)
+
+            itemView.setOnClickListener {
+                val action = CryptoListFragmentDirections.actionCryptoListFragmentToCryptoDetailsFragment(crypto.id)
+                findNavController(itemView).navigate(action)
+            }
         }
     }
 }
