@@ -31,4 +31,8 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
         }
     }
 
+    override suspend fun getCryptoById(id: String): Crypto {
+        return cryptoDao.findById(id).toDomain()
+    }
+
 }
