@@ -5,14 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".ui.fragments.CryptoDetailsFragment">
+    tools:context=".ui.fragments.CryptoDetailsFragment"
+    android:background="@android:color/white">
 
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="48dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,15 +21,15 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-
     <!-- Crypto Image -->
     <ImageView
         android:id="@+id/crypto_image"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:contentDescription="Crypto Image"
         android:scaleType="centerInside"
+        android:layout_gravity="center"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,23 +40,38 @@
         android:id="@+id/crypto_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
+        android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
+        android:layout_marginTop="12dp"
         app:layout_constraintTop_toBottomOf="@id/crypto_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="Bitcoin (BTC)" />
+
+    <!-- Coin Symbol -->
+    <TextView
+        android:id="@+id/crypto_symbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/crypto_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="BTC" />
 
     <!-- Current Price -->
     <TextView
         android:id="@+id/crypto_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textColor="@android:color/holo_green_dark"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/crypto_name"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/crypto_symbol"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="$43,500.00" />
@@ -78,12 +94,13 @@
             android:layout_height="wrap_content"
             android:text="Market Cap:"
             android:textStyle="bold"
-            tools:text="Market Cap:" />
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/crypto_market_cap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
             tools:text="$850B" />
 
         <!-- 24h Volume -->
@@ -92,12 +109,13 @@
             android:layout_height="wrap_content"
             android:text="24h Volume:"
             android:textStyle="bold"
-            tools:text="24h Volume:" />
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/crypto_volume"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
             tools:text="$50B" />
 
         <!-- Price Change -->
@@ -106,12 +124,13 @@
             android:layout_height="wrap_content"
             android:text="24h Change:"
             android:textStyle="bold"
-            tools:text="24h Change:" />
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/crypto_change"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
             tools:text="+3.5%" />
     </androidx.gridlayout.widget.GridLayout>
 
@@ -119,12 +138,12 @@
     <View
         android:id="@+id/crypto_chart_placeholder"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
         android:layout_marginTop="24dp"
         android:background="@android:color/darker_gray"
+        android:layout_marginBottom="24dp"
         app:layout_constraintTop_toBottomOf="@id/crypto_details_grid"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

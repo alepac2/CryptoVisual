@@ -5,15 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import dev.alexpace.cryptovisual.R
 import dev.alexpace.cryptovisual.databinding.FragmentCryptoDetailsBinding
+import dev.alexpace.cryptovisual.domain.models.Crypto
 import dev.alexpace.cryptovisual.ui.CryptoDetailsViewModel
 
 class CryptoDetailsFragment : Fragment() {
@@ -48,9 +51,7 @@ class CryptoDetailsFragment : Fragment() {
         viewModel.fetchCryptoById(cryptoId)
 
         viewModel.crypto.observe(viewLifecycleOwner, Observer { crypto ->
-            binding.cryptoName.text = crypto.name
-            binding.cryptoPrice.text = crypto.currentPrice.toString()
-            binding.cryptoMarketCap.text = crypto.marketCap.toString()
+            assignCryptoDetails(crypto)
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer { error ->
@@ -64,5 +65,25 @@ class CryptoDetailsFragment : Fragment() {
         })
 
     }
+
+    private val cryptoImage: ImageView by lazy {
+        binding.cryptoImage
+    }
+
+    private fun assignCryptoDetails(crypto: Crypto) {
+        Glide.with(binding.root.context)
+            .load(crypto.image)
+            .placeholder(R.drawable.ic_launcher_background)
+            .centerCrop()
+            .into(cryptoImage)
+
+        binding.cryptoName.text = crypto.name
+        binding.cryptoSymbol.text = crypto.symbol
+        binding.cryptoPrice.text = crypto.currentPrice.toString()
+        binding.cryptoMarketCap.text = crypto.marketCap.toString()
+        binding.cryptoVolume.text = crypto.totalVolume.toString()
+
+    }
+
 
 }
