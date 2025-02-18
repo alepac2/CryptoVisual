@@ -39,7 +39,9 @@ class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
 
         fun bind(crypto: Crypto) {
             binding.cryptoSymbol.text = crypto.symbol.uppercase()
+            binding.cryptoName.text = crypto.name
             binding.cryptoPrice.text = "$${crypto.currentPrice}"
+            binding.cryptoTotalVolume.text = "Total Volume: $${crypto.totalVolume}"
 
             Glide.with(itemView.context)
                 .load(crypto.image)
