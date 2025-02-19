@@ -5,8 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -46,6 +45,14 @@ class CryptoDetailsFragment : Fragment() {
             insets
         }
 
+        initCrypto()
+        initListeners()
+    }
+
+
+    private var isFavorite = false
+
+    private fun initCrypto() {
         val cryptoId = args.cryptoId
 
         // Use the cryptoId to fetch and display the details of the selected crypto
@@ -67,25 +74,47 @@ class CryptoDetailsFragment : Fragment() {
             binding.progressBar.isVisible = loading
         })
 
+        viewModel.isCryptoFavorite(cryptoId).observe(viewLifecycleOwner) { favorite ->
+            isFavorite = favorite
+            binding.btnFavorite.setImageResource(if (favorite) R.drawable.star_filled else R.drawable.star_empty)
+        }
+
     }
 
-    private val cryptoImage: ImageView by lazy {
-        binding.cryptoImage
+    private fun initListeners() {
+        binding.btnFavorite.setOnClickListener {
+            val cryptoId = args.cryptoId
+            if (isFavorite) {
+                removeCryptoFromFavorites()
+            } else {
+                addCryptoToFavorites()
+            }
+        }
     }
+
+    private fun addCryptoToFavorites() {
+        val cryptoId = args.cryptoId
+        viewModel.addCryptoToFavorites(cryptoId)
+    }
+
+    private fun removeCryptoFromFavorites() {
+        val cryptoId = args.cryptoId
+        viewModel.removeCryptoFromFavorites(cryptoId)
+    }
+
 
     private fun assignCryptoDetails(crypto: Crypto) {
         Glide.with(binding.root.context)
             .load(crypto.image)
             .placeholder(R.drawable.ic_launcher_background)
             .centerCrop()
-            .into(cryptoImage)
+            .into(binding.cryptoImage)
 
         binding.cryptoName.text = crypto.name
         binding.cryptoSymbol.text = crypto.symbol
         binding.cryptoPrice.text = crypto.currentPrice.toString()
         binding.cryptoMarketCap.text = crypto.marketCap.toString()
         binding.cryptoVolume.text = crypto.totalVolume.toString()
-
     }
 
 

@@ -1,5 +1,6 @@
 package dev.alexpace.cryptovisual.domain
 
+import androidx.lifecycle.LiveData
 import dev.alexpace.cryptovisual.domain.models.Crypto
 
 interface CryptoRepository {
@@ -9,7 +10,10 @@ interface CryptoRepository {
     suspend fun getCryptoById(id: String): Crypto?
 
     // Favourite cryptos
+    suspend fun addToFavorites(crypto: Crypto)
     suspend fun getFavouriteCryptos(): List<Crypto>?
-    suspend fun getFavouriteCryptoById(id: String): Crypto?
+    suspend fun getFavoriteCryptoById(id: String): Crypto?
+    fun isCryptoFavorite(cryptoId: String): LiveData<Boolean>
+    suspend fun removeFromFavorites(cryptoId: String)
 
 }

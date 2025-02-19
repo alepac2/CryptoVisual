@@ -1,6 +1,7 @@
 package dev.alexpace.cryptovisual.data
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import dev.alexpace.cryptovisual.data.local.db.AppDatabase
 import dev.alexpace.cryptovisual.data.remote.service.ApiService
 import dev.alexpace.cryptovisual.data.remote.client.RetrofitClient
@@ -12,7 +13,7 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
 
     private val apiService: ApiService = RetrofitClient.retrofit.create(ApiService::class.java)
     private val cryptoDao = db.cryptoDao()
-    private val favouriteCryptoDao = db.favouriteCryptoDao()
+    private val favoriteCryptoDao = db.favoriteCryptoDao()
 
     override suspend fun getCryptos(): List<Crypto> {
         try {
@@ -52,8 +53,14 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
         return dbCrypto.toDomain()
     }
 
+    override suspend fun addToFavorites(crypto: Crypto) {
+        val dbCrypto = crypto.toDatabase()
+        favoriteCryptoDao.insert(dbCrypto)
+        Log.d("MainDebug", "Added ${crypto.name} to favorites")
+    }
+
     override suspend fun getFavouriteCryptos(): List<Crypto>? {
-        val favouriteCryptoListFromDb = favouriteCryptoDao.getAll()?.map {
+        val favouriteCryptoListFromDb = favoriteCryptoDao.getAll()?.map {
             it.toDomain()
         }
 
@@ -64,14 +71,23 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
         return null
     }
 
-    override suspend fun getFavouriteCryptoById(id: String): Crypto? {
-        val favouriteCryptoFromDb = favouriteCryptoDao.findById(id)
+    override suspend fun getFavoriteCryptoById(id: String): Crypto? {
+        val favouriteCryptoFromDb = favoriteCryptoDao.findById(id)
 
         if (favouriteCryptoFromDb != null) {
             return favouriteCryptoFromDb.toDomain()
         }
 
         return null
+    }
+
+    override fun isCryptoFavorite(cryptoId: String): LiveData<Boolean> {
+        return favoriteCryptoDao.isCryptoFavorite(cryptoId)
+    }
+
+    override suspend fun removeFromFavorites(cryptoId: String) {
+        favoriteCryptoDao.deleteById(cryptoId)
+        Log.d("MainDebug", "Removed $cryptoId from favorites")
     }
 
 }

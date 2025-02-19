@@ -49,7 +49,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="Bitcoin (BTC)" />
 
-    <!-- Coin Symbol -->
     <TextView
         android:id="@+id/crypto_symbol"
         android:layout_width="wrap_content"
@@ -82,10 +81,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/crypto_price"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:columnCount="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/crypto_price"
         app:rowCount="2">
 
         <!-- Market Cap -->
@@ -93,8 +92,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Market Cap:"
-            android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/crypto_market_cap"
@@ -108,8 +107,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="24h Volume:"
-            android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/crypto_volume"
@@ -123,8 +122,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="24h Change:"
-            android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/crypto_change"
@@ -145,5 +144,16 @@
         app:layout_constraintTop_toBottomOf="@id/crypto_details_grid"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/btnFavorite"
+        android:layout_width="43dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/star_empty"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.837"
+        app:layout_constraintStart_toEndOf="@+id/crypto_image"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

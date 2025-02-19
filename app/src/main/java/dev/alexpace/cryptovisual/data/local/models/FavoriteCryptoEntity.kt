@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "favourite_cryptos")
-data class FavouriteCryptoEntity(
+@Entity(tableName = "favorite_cryptos")
+data class FavoriteCryptoEntity(
     @PrimaryKey val id: String,
     @ColumnInfo(name = "symbol") val symbol: String,
     @ColumnInfo(name = "name") val name: String,

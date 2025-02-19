@@ -1,4 +1,4 @@
 package dev.alexpace.cryptovisual.ui.viewModels
 
-class CryptoFavouriteViewModel {
+class CryptoFavoriteViewModel {
 }

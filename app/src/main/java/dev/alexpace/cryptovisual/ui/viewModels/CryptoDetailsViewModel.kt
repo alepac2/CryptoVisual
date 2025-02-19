@@ -38,6 +38,25 @@ class CryptoDetailsViewModel(private val cryptoRepository: CryptoRepository): Vi
         }
     }
 
+    fun addCryptoToFavorites(cryptoId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val crypto = cryptoRepository.getCryptoById(cryptoId)
+            if (crypto != null)
+                cryptoRepository.addToFavorites(crypto)
+        }
+    }
+
+    fun removeCryptoFromFavorites(cryptoId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            cryptoRepository.removeFromFavorites(cryptoId)
+        }
+    }
+
+    fun isCryptoFavorite(cryptoId: String): LiveData<Boolean> {
+        return cryptoRepository.isCryptoFavorite(cryptoId)
+    }
+
+
     companion object {
         val Factory = viewModelFactory {
             initializer {
