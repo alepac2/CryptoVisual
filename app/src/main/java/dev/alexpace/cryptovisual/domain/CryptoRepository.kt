@@ -16,6 +16,8 @@ interface CryptoRepository {
     suspend fun getFavoriteCryptoById(id: String): Crypto?
     fun isCryptoFavorite(cryptoId: String): LiveData<Boolean>
     suspend fun removeFromFavorites(cryptoId: String)
+
+    // Crypto history
     suspend fun getCryptoHistory(cryptoId: String): List<CryptoHistory>
 
 }

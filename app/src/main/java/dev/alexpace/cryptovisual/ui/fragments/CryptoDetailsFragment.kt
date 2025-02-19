@@ -1,6 +1,8 @@
 package dev.alexpace.cryptovisual.ui.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -47,8 +49,8 @@ class CryptoDetailsFragment : Fragment() {
 
         initCrypto()
         initListeners()
+        testCryptoHistoryRepository(cryptoId = args.cryptoId)
     }
-
 
     private var isFavorite = false
 
@@ -102,7 +104,7 @@ class CryptoDetailsFragment : Fragment() {
         viewModel.removeCryptoFromFavorites(cryptoId)
     }
 
-
+    @SuppressLint("SetTextI18n")
     private fun assignCryptoDetails(crypto: Crypto) {
         Glide.with(binding.root.context)
             .load(crypto.image)
@@ -117,5 +119,23 @@ class CryptoDetailsFragment : Fragment() {
         binding.cryptoVolume.text = crypto.totalVolume.toString()
     }
 
+
+
+
+    //! TEMPORARY
+    private fun testCryptoHistoryRepository(cryptoId: String) {
+        Log.d("CryptoDetailsFragment", "Testing repository for crypto ID: $cryptoId")
+
+        viewModel.getCryptoHistory(cryptoId).observe(viewLifecycleOwner, Observer { history ->
+            if (history.isNotEmpty()) {
+                Log.d("CryptoDetailsFragment", "Crypto history fetched: ${history.size} items")
+                history.forEach { entry ->
+                    Log.d("CryptoDetailsFragment", "Timestamp: ${entry.timestamp}, Price: ${entry.price}")
+                }
+            } else {
+                Log.d("CryptoDetailsFragment", "No crypto history found in repository.")
+            }
+        })
+    }
 
 }

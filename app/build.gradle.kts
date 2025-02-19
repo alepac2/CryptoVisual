@@ -78,5 +78,4 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
 
     // Charts
-    implementation(libs.mpandroidchart)
 }
