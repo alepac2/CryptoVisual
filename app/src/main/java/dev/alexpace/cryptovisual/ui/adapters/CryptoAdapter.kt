@@ -1,4 +1,4 @@
-package dev.alexpace.cryptovisual.ui
+package dev.alexpace.cryptovisual.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

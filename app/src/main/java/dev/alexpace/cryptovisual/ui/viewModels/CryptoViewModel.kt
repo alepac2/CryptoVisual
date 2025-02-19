@@ -1,4 +1,4 @@
-package dev.alexpace.cryptovisual.ui
+package dev.alexpace.cryptovisual.ui.viewModels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

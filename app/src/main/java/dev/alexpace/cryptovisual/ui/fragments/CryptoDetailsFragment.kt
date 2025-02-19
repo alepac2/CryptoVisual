@@ -17,7 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import dev.alexpace.cryptovisual.R
 import dev.alexpace.cryptovisual.databinding.FragmentCryptoDetailsBinding
 import dev.alexpace.cryptovisual.domain.models.Crypto
-import dev.alexpace.cryptovisual.ui.CryptoDetailsViewModel
+import dev.alexpace.cryptovisual.ui.viewModels.CryptoDetailsViewModel
 
 class CryptoDetailsFragment : Fragment() {
 

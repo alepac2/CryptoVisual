@@ -18,7 +18,7 @@ class CryptoApplication : Application() {
             context,
             AppDatabase::class.java, dbName
         )
-            .fallbackToDestructiveMigration() // For db schema changes
+            .fallbackToDestructiveMigration() // For db version change
             .build()
     }
 

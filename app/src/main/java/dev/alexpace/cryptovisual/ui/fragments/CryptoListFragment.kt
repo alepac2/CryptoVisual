@@ -12,8 +12,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import dev.alexpace.cryptovisual.databinding.FragmentCryptoListBinding
-import dev.alexpace.cryptovisual.ui.CryptoAdapter
-import dev.alexpace.cryptovisual.ui.CryptoViewModel
+import dev.alexpace.cryptovisual.ui.adapters.CryptoAdapter
+import dev.alexpace.cryptovisual.ui.viewModels.CryptoViewModel
 
 class CryptoListFragment : Fragment() {
 
