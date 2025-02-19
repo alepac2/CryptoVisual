@@ -1,7 +1,6 @@
 package dev.alexpace.cryptovisual.data.local.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -12,17 +11,15 @@ interface CryptoDao {
     @Query("SELECT * FROM cryptos")
     fun getAll(): List<CryptoEntity>
 
-    @Query("SELECT * FROM cryptos WHERE id IN (:cryptoIds)")
-    fun loadAllByIds(cryptoIds: Array<String>): List<CryptoEntity>
-
     @Query(
         "SELECT * FROM cryptos WHERE id LIKE :id LIMIT 1"
     )
-    fun findById(id: String): CryptoEntity
+    fun findById(id: String): CryptoEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(cryptoEntities: List<CryptoEntity>)
 
-    @Delete
-    fun delete(user: CryptoEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(cryptoEntity: CryptoEntity)
+
 }

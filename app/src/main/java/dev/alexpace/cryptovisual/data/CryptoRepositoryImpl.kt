@@ -31,8 +31,29 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
         }
     }
 
-    override suspend fun getCryptoById(id: String): Crypto {
-        return cryptoDao.findById(id).toDomain()
+    override suspend fun getCryptoById(id: String): Crypto? {
+
+        // Try to retrieve it from db
+        val cryptoFromDb = cryptoDao.findById(id)
+        if (cryptoFromDb != null) {
+            return cryptoFromDb.toDomain()
+        }
+
+        // If not found, try to retrieve it from Api
+        val cryptoFromApi = try {
+            apiService.getCryptoById(id)
+        } catch (e: HttpException) {
+            Log.e("MainDebug", "HTTP error when fetching crypto: ${e.code()} - ${e.message()}")
+            return null
+        }
+
+        if (cryptoFromApi != null) {
+            val dbCrypto = cryptoFromApi.toDatabase()
+            cryptoDao.insert(dbCrypto)
+            return dbCrypto.toDomain()
+        }
+
+        return null
     }
 
 }

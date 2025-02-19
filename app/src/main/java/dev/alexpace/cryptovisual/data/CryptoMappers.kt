@@ -5,6 +5,10 @@ import dev.alexpace.cryptovisual.data.local.models.CryptoEntity
 import dev.alexpace.cryptovisual.data.remote.models.CryptoResponse
 import dev.alexpace.cryptovisual.domain.models.Crypto
 
+// Limit to two decimals
+@SuppressLint("DefaultLocale")
+fun Double.formatDecimals(): Double = String.format("%.2f", this).replace(",", ".").toDouble()
+
 fun CryptoResponse.toDatabase() = CryptoEntity(
     this.id,
     this.symbol,
@@ -14,10 +18,6 @@ fun CryptoResponse.toDatabase() = CryptoEntity(
     this.marketCap,
     this.totalVolume
 )
-
-// Limit to two decimals
-@SuppressLint("DefaultLocale")
-fun Double.formatDecimals(): Double = String.format("%.2f", this).replace(",", ".").toDouble()
 
 fun CryptoEntity.toDomain() = Crypto(
     this.id,

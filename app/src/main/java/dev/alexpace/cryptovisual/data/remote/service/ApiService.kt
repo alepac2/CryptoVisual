@@ -2,6 +2,7 @@ package dev.alexpace.cryptovisual.data.remote.service
 
 import dev.alexpace.cryptovisual.data.remote.models.CryptoResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -13,4 +14,13 @@ interface ApiService {
         @Query("page") page: Int = 1,
         @Query("sparkline") sparkline: Boolean = false
     ): List<CryptoResponse>
+
+    @GET("coins/{id}")
+    suspend fun getCryptoById(
+        @Path("id") id: String
+    ): CryptoResponse?
+
 }
+
+// /coins/{id}
+// /coins/{id}/market_chart
