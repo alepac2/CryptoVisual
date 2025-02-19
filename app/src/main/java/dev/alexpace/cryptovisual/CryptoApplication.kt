@@ -17,7 +17,9 @@ class CryptoApplication : Application() {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java, dbName
-        ).build()
+        )
+            .fallbackToDestructiveMigration() // For db schema changes
+            .build()
     }
 
     override fun onCreate() {

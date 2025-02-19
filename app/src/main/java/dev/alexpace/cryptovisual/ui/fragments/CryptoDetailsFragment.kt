@@ -51,7 +51,9 @@ class CryptoDetailsFragment : Fragment() {
         viewModel.fetchCryptoById(cryptoId)
 
         viewModel.crypto.observe(viewLifecycleOwner, Observer { crypto ->
-            assignCryptoDetails(crypto)
+            if (crypto != null) {
+                assignCryptoDetails(crypto)
+            }
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer { error ->

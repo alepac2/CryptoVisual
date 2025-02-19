@@ -46,7 +46,9 @@ class CryptoListFragment : Fragment() {
             viewModel.fetchCryptos()
 
             viewModel.cryptos.observe(viewLifecycleOwner, Observer { cryptos ->
-                cryptoAdapter.addCryptos(cryptos)
+                if (cryptos != null) {
+                    cryptoAdapter.addCryptos(cryptos)
+                }
             })
         }
 

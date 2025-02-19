@@ -11,9 +11,7 @@ interface CryptoDao {
     @Query("SELECT * FROM cryptos")
     fun getAll(): List<CryptoEntity>
 
-    @Query(
-        "SELECT * FROM cryptos WHERE id LIKE :id LIMIT 1"
-    )
+    @Query("SELECT * FROM cryptos WHERE id LIKE :id LIMIT 1")
     fun findById(id: String): CryptoEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

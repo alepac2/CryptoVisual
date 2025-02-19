@@ -18,7 +18,7 @@ interface ApiService {
     @GET("coins/{id}")
     suspend fun getCryptoById(
         @Path("id") id: String
-    ): CryptoResponse?
+    ): CryptoResponse
 
 }
 

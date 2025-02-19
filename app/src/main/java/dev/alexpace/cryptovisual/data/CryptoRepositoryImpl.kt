@@ -12,9 +12,9 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
 
     private val apiService: ApiService = RetrofitClient.retrofit.create(ApiService::class.java)
     private val cryptoDao = db.cryptoDao()
+    private val favouriteCryptoDao = db.favouriteCryptoDao()
 
     override suspend fun getCryptos(): List<Crypto> {
-
         try {
             val dbEntities = apiService.getCryptos().map {
                 it.toDatabase()
@@ -47,10 +47,28 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
             return null
         }
 
-        if (cryptoFromApi != null) {
-            val dbCrypto = cryptoFromApi.toDatabase()
-            cryptoDao.insert(dbCrypto)
-            return dbCrypto.toDomain()
+        val dbCrypto = cryptoFromApi.toDatabase()
+        cryptoDao.insert(dbCrypto)
+        return dbCrypto.toDomain()
+    }
+
+    override suspend fun getFavouriteCryptos(): List<Crypto>? {
+        val favouriteCryptoListFromDb = favouriteCryptoDao.getAll()?.map {
+            it.toDomain()
+        }
+
+        if (favouriteCryptoListFromDb != null) {
+            return favouriteCryptoListFromDb
+        }
+
+        return null
+    }
+
+    override suspend fun getFavouriteCryptoById(id: String): Crypto? {
+        val favouriteCryptoFromDb = favouriteCryptoDao.findById(id)
+
+        if (favouriteCryptoFromDb != null) {
+            return favouriteCryptoFromDb.toDomain()
         }
 
         return null

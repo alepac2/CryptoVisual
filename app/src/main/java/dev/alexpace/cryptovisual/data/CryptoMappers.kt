@@ -2,6 +2,7 @@ package dev.alexpace.cryptovisual.data
 
 import android.annotation.SuppressLint
 import dev.alexpace.cryptovisual.data.local.models.CryptoEntity
+import dev.alexpace.cryptovisual.data.local.models.FavouriteCryptoEntity
 import dev.alexpace.cryptovisual.data.remote.models.CryptoResponse
 import dev.alexpace.cryptovisual.domain.models.Crypto
 
@@ -20,6 +21,16 @@ fun CryptoResponse.toDatabase() = CryptoEntity(
 )
 
 fun CryptoEntity.toDomain() = Crypto(
+    this.id,
+    this.symbol,
+    this.name,
+    this.image,
+    this.currentPrice.formatDecimals(),
+    this.marketCap.formatDecimals(),
+    this.totalVolume.formatDecimals()
+)
+
+fun FavouriteCryptoEntity.toDomain() = Crypto(
     this.id,
     this.symbol,
     this.name,
