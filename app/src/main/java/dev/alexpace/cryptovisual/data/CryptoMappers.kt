@@ -2,9 +2,12 @@ package dev.alexpace.cryptovisual.data
 
 import android.annotation.SuppressLint
 import dev.alexpace.cryptovisual.data.local.models.CryptoEntity
+import dev.alexpace.cryptovisual.data.local.models.CryptoHistoryEntity
 import dev.alexpace.cryptovisual.data.local.models.FavoriteCryptoEntity
+import dev.alexpace.cryptovisual.data.remote.models.CryptoHistoryResponse
 import dev.alexpace.cryptovisual.data.remote.models.CryptoResponse
 import dev.alexpace.cryptovisual.domain.models.Crypto
+import dev.alexpace.cryptovisual.domain.models.CryptoHistory
 
 // Limit to two decimals
 @SuppressLint("DefaultLocale")
@@ -49,3 +52,25 @@ fun Crypto.toDatabase() = FavoriteCryptoEntity(
     this.marketCap,
     this.totalVolume
 )
+
+fun CryptoHistoryEntity.toDomain() = CryptoHistory(
+    this.id,
+    this.cryptoId,
+    this.timestamp,
+    this.price.formatDecimals(),
+    this.marketCap.formatDecimals(),
+    this.totalVolume.formatDecimals()
+)
+
+fun CryptoHistoryResponse.toDatabase(cryptoId: String): List<CryptoHistoryEntity> {
+    return this.prices.mapIndexed { index, priceEntry ->
+        CryptoHistoryEntity(
+            cryptoId = cryptoId,
+            timestamp = (priceEntry[0] * 1000).toLong(),  // Convert timestamp from seconds to milliseconds
+            price = priceEntry[1],  // price from the "prices" list
+            marketCap = this.marketCaps[index][1],  // Market cap from the "market_caps" list
+            totalVolume = this.totalVolumes[index][1]  // Total volume from the "total_volumes" list
+        )
+    }
+}
+

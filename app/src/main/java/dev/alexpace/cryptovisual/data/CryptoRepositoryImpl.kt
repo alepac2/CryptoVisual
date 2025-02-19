@@ -7,6 +7,7 @@ import dev.alexpace.cryptovisual.data.remote.service.ApiService
 import dev.alexpace.cryptovisual.data.remote.client.RetrofitClient
 import dev.alexpace.cryptovisual.domain.CryptoRepository
 import dev.alexpace.cryptovisual.domain.models.Crypto
+import dev.alexpace.cryptovisual.domain.models.CryptoHistory
 import retrofit2.HttpException
 
 class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
@@ -14,6 +15,7 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
     private val apiService: ApiService = RetrofitClient.retrofit.create(ApiService::class.java)
     private val cryptoDao = db.cryptoDao()
     private val favoriteCryptoDao = db.favoriteCryptoDao()
+    private val cryptoHistoryDao = db.cryptoHistoryDao()
 
     override suspend fun getCryptos(): List<Crypto> {
         try {
@@ -88,6 +90,26 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
     override suspend fun removeFromFavorites(cryptoId: String) {
         favoriteCryptoDao.deleteById(cryptoId)
         Log.d("MainDebug", "Removed $cryptoId from favorites")
+    }
+
+    override suspend fun getCryptoHistory(cryptoId: String): List<CryptoHistory> {
+
+        val historyFromDb = cryptoHistoryDao.getCryptoHistory(cryptoId)
+        if (historyFromDb.isNotEmpty()) {
+            return historyFromDb.map { it.toDomain() }
+        }
+
+        try {
+            val historyFromApi = apiService.getCryptoHistory(cryptoId)
+            val dbHistory = historyFromApi.toDatabase(cryptoId)
+
+            cryptoHistoryDao.insertAll(dbHistory)
+
+            return dbHistory.map { it.toDomain() }
+        } catch (e: HttpException) {
+            Log.e("MainDebug", "HTTP error when fetching crypto history: ${e.code()} - ${e.message()}")
+            return emptyList()
+        }
     }
 
 }

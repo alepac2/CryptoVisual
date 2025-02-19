@@ -1,5 +1,6 @@
 package dev.alexpace.cryptovisual.data.remote.service
 
+import dev.alexpace.cryptovisual.data.remote.models.CryptoHistoryResponse
 import dev.alexpace.cryptovisual.data.remote.models.CryptoResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -20,7 +21,11 @@ interface ApiService {
         @Path("id") id: String
     ): CryptoResponse
 
-}
+    @GET("coins/{id}/market_chart")
+    suspend fun getCryptoHistory(
+        @Path("id") id: String,
+        @Query("vs_currency") currency: String = "usd",
+        @Query("days") days: Int = 30
+    ): CryptoHistoryResponse
 
-// /coins/{id}
-// /coins/{id}/market_chart
+}
