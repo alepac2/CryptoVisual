@@ -9,10 +9,18 @@ import dev.alexpace.cryptovisual.data.remote.models.CryptoResponse
 import dev.alexpace.cryptovisual.domain.models.Crypto
 import dev.alexpace.cryptovisual.domain.models.CryptoHistory
 
-// Limit to two decimals
+/**
+ * Formats the decimals of a double by rounding it to 2 decimals
+ */
 @SuppressLint("DefaultLocale")
-fun Double.formatDecimals(): Double = String.format("%.2f", this).replace(",", ".").toDouble()
+fun Double.formatDecimals(): Double = String
+    .format("%.2f", this)
+    .replace(",", ".")
+    .toDouble()
 
+/**
+ * Maps the CryptoResponse to CryptoEntity
+ */
 fun CryptoResponse.toDatabase() = CryptoEntity(
     this.id,
     this.symbol,
@@ -23,6 +31,9 @@ fun CryptoResponse.toDatabase() = CryptoEntity(
     this.totalVolume
 )
 
+/**
+ * Maps the CryptoEntity to Crypto
+ */
 fun CryptoEntity.toDomain() = Crypto(
     this.id,
     this.symbol,
@@ -33,6 +44,9 @@ fun CryptoEntity.toDomain() = Crypto(
     this.totalVolume.formatDecimals()
 )
 
+/**
+ * Maps the FavoriteCryptoEntity to Crypto
+ */
 fun FavoriteCryptoEntity.toDomain() = Crypto(
     this.id,
     this.symbol,
@@ -43,6 +57,9 @@ fun FavoriteCryptoEntity.toDomain() = Crypto(
     this.totalVolume.formatDecimals()
 )
 
+/**
+ * Maps the Crypto to FavoriteCryptoEntity
+ */
 fun Crypto.toDatabase() = FavoriteCryptoEntity(
     this.id,
     this.symbol,
@@ -53,6 +70,9 @@ fun Crypto.toDatabase() = FavoriteCryptoEntity(
     this.totalVolume
 )
 
+/**
+ * Maps the CryptoHistoryEntity to CryptoHistory
+ */
 fun CryptoHistoryEntity.toDomain() = CryptoHistory(
     this.id,
     this.cryptoId,
@@ -62,6 +82,9 @@ fun CryptoHistoryEntity.toDomain() = CryptoHistory(
     this.totalVolume.formatDecimals()
 )
 
+/**
+ * Maps the CryptoHistoryResponse to CryptoHistoryEntity
+ */
 fun CryptoHistoryResponse.toDatabase(cryptoId: String): List<CryptoHistoryEntity> {
     return this.prices.mapIndexed { index, priceEntry ->
         CryptoHistoryEntity(
@@ -73,4 +96,3 @@ fun CryptoHistoryResponse.toDatabase(cryptoId: String): List<CryptoHistoryEntity
         )
     }
 }
-

@@ -2,17 +2,14 @@ package dev.alexpace.cryptovisual.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -25,13 +22,14 @@ import dev.alexpace.cryptovisual.ui.viewModels.CryptoDetailsViewModel
 class CryptoDetailsFragment : Fragment() {
 
     // Arguments passed from the CryptoListFragment (navigation graph)
-    val args: CryptoDetailsFragmentArgs by navArgs()
+    private val args: CryptoDetailsFragmentArgs by navArgs()
 
     // Variables and values
     private var _binding: FragmentCryptoDetailsBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: CryptoDetailsViewModel by viewModels { CryptoDetailsViewModel.Factory }
+    private var isFavorite = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,8 +55,6 @@ class CryptoDetailsFragment : Fragment() {
         initListeners()
     }
 
-    private var isFavorite = false
-
     /**
      * Fetches the crypto from its ID (separation of concerns) and observes the changes
      * in the ViewModel
@@ -69,25 +65,27 @@ class CryptoDetailsFragment : Fragment() {
         // Use the cryptoId to fetch and display the details of the selected crypto
         viewModel.fetchCryptoById(cryptoId)
 
-        viewModel.crypto.observe(viewLifecycleOwner, Observer { crypto ->
+        viewModel.crypto.observe(viewLifecycleOwner) { crypto ->
             if (crypto != null) {
                 assignCryptoDetails(crypto)
             }
-        })
+        }
 
-        viewModel.error.observe(viewLifecycleOwner, Observer { error ->
+        viewModel.error.observe(viewLifecycleOwner) { error ->
             if (error!!.isNotEmpty()) {
                 Snackbar.make(binding.cryptoName, error, Snackbar.LENGTH_LONG).show()
             }
-        })
+        }
 
-        viewModel.loading.observe(viewLifecycleOwner, Observer { loading ->
+        viewModel.loading.observe(viewLifecycleOwner) { loading ->
             binding.progressBar.isVisible = loading
-        })
+        }
 
         viewModel.isCryptoFavorite(cryptoId).observe(viewLifecycleOwner) { favorite ->
             isFavorite = favorite
-            binding.btnFavorite.setImageResource(if (favorite) R.drawable.star_filled else R.drawable.star_empty)
+            binding.btnFavorite.setImageResource(
+                if (favorite) R.drawable.star_filled else R.drawable.star_empty
+            )
         }
 
     }
@@ -97,7 +95,6 @@ class CryptoDetailsFragment : Fragment() {
      */
     private fun initListeners() {
         binding.btnFavorite.setOnClickListener {
-            val cryptoId = args.cryptoId
             if (isFavorite) {
                 removeCryptoFromFavorites()
             } else {
@@ -107,9 +104,10 @@ class CryptoDetailsFragment : Fragment() {
 
         binding.btnChart.setOnClickListener {
             val action =
-                CryptoDetailsFragmentDirections.actionCryptoDetailsFragmentToCryptoHistoryChartFragment(
-                    args.cryptoId
-                )
+                CryptoDetailsFragmentDirections
+                    .actionCryptoDetailsFragmentToCryptoHistoryChartFragment(
+                        args.cryptoId
+                    )
             findNavController(binding.btnChart).navigate(action)
         }
     }
@@ -149,5 +147,4 @@ class CryptoDetailsFragment : Fragment() {
         binding.cryptoMarketCap.text = crypto.marketCap.toString()
         binding.cryptoVolume.text = crypto.totalVolume.toString()
     }
-
 }

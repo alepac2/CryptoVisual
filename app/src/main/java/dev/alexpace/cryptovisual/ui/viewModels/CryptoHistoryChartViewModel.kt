@@ -13,35 +13,36 @@ import dev.alexpace.cryptovisual.domain.models.CryptoHistory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CryptoHistoryChartViewModel(private val cryptoRepository: CryptoRepository): ViewModel() {
-
+class CryptoHistoryChartViewModel(private val cryptoRepository: CryptoRepository) : ViewModel() {
 
     // Public LiveData and private MutableLiveData, for encapsulation and data protection
     private val _crypto = MutableLiveData<CryptoHistory?>()
     val crypto: LiveData<CryptoHistory?> get() = _crypto
 
-    private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean> get() = _loading
-
     private val _error = MutableLiveData<String?>()
-    val error: LiveData<String?> get() = _error
 
     /**
      * Fetch crypto history from the repository and update the LiveData
      */
     fun getCryptoHistory(cryptoId: String): LiveData<List<CryptoHistory>> {
         val historyLiveData = MutableLiveData<List<CryptoHistory>>()
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val history = cryptoRepository.getCryptoHistory(cryptoId)
                 historyLiveData.postValue(history)
             } catch (e: Exception) {
-                _error.postValue("An error occurred while fetching crypto history: ${e.message}")
+                _error.postValue(
+                    "An error occurred while fetching crypto history: ${e.message}"
+                )
             }
         }
         return historyLiveData
     }
 
+    /**
+     * Factory for creating instances of CryptoHistoryChartViewModel
+     */
     companion object {
         val Factory = viewModelFactory {
             initializer {

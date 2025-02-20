@@ -8,7 +8,9 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    // For all cryptos (Max. 250)
+    /**
+     * For all cryptos with a limit of 250
+     */
     @GET("coins/markets")
     suspend fun getCryptos(
         @Query("vs_currency") currency: String = "usd",
@@ -18,18 +20,21 @@ interface ApiService {
         @Query("sparkline") sparkline: Boolean = false
     ): List<CryptoResponse>
 
-    // For cryptos by ID
+    /**
+     * For a specific crypto by id
+     */
     @GET("coins/{id}")
     suspend fun getCryptoById(
         @Path("id") id: String
     ): CryptoResponse
 
-    // For crypto history
+    /**
+     * For a specific crypto's history
+     */
     @GET("coins/{id}/market_chart")
     suspend fun getCryptoHistory(
         @Path("id") id: String,
         @Query("vs_currency") currency: String = "usd",
         @Query("days") days: Int = 30
     ): CryptoHistoryResponse
-
 }

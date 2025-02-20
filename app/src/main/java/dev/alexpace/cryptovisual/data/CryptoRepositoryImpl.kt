@@ -10,57 +10,54 @@ import dev.alexpace.cryptovisual.domain.models.Crypto
 import dev.alexpace.cryptovisual.domain.models.CryptoHistory
 import retrofit2.HttpException
 
-class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
+class CryptoRepositoryImpl(db: AppDatabase) : CryptoRepository {
 
+    // Values
     private val apiService: ApiService = RetrofitClient.retrofit.create(ApiService::class.java)
     private val cryptoDao = db.cryptoDao()
     private val favoriteCryptoDao = db.favoriteCryptoDao()
     private val cryptoHistoryDao = db.cryptoHistoryDao()
 
     /**
-     * Fetch cryptos from the API and insert them into the database
+     * Fetch cryptos from db first, if not found it fetches them from the API,
+     * insert them into the database and return them
      */
     override suspend fun getCryptos(): List<Crypto> {
 
-        val cryptosFromDb = cryptoDao.getAll()
-        if (cryptosFromDb.isNotEmpty()) {
-            return cryptosFromDb.map {
-                it.toDomain()
-            }
-        }
-
-        try {
-            val dbEntities = apiService.getCryptos().map {
-                it.toDatabase()
+        return try {
+            val cryptosFromDb = cryptoDao.getAll()
+            if (cryptosFromDb.isNotEmpty()) {
+                return cryptosFromDb.map { it.toDomain() }
             }
 
+            val dbEntities = apiService.getCryptos().map { it.toDatabase() }
             cryptoDao.insertAll(dbEntities)
-            Log.d("MainDebug", "Inserted ${dbEntities.size} cryptos into the database")
-        } catch (e: HttpException) {
-            Log.e("MainDebug", "Error HTTP: ${e.code()} - ${e.message()}")
-        }
 
-        return cryptoDao.getAll().map {
-            it.toDomain()
+            dbEntities.map { it.toDomain() }
+        } catch (e: HttpException) {
+            Log.e("MainDebug", "HTTP Error: ${e.code()} - ${e.message()}")
+            emptyList()
         }
     }
 
     /**
-     * Fetch crypto by id from the API and insert it into the database if not found
+     * Fetch crypto by id from the db first, if not found it fetches them from
+     * the API, insert it into the database and return it
      */
     override suspend fun getCryptoById(id: String): Crypto? {
 
-        // Try to retrieve it from db
         val cryptoFromDb = cryptoDao.findById(id)
         if (cryptoFromDb != null) {
             return cryptoFromDb.toDomain()
         }
 
-        // If not found, try to retrieve it from Api
         val cryptoFromApi = try {
             apiService.getCryptoById(id)
         } catch (e: HttpException) {
-            Log.e("MainDebug", "HTTP error when fetching crypto: ${e.code()} - ${e.message()}")
+            Log.e(
+                "MainDebug",
+                "HTTP error when fetching crypto: ${e.code()} - ${e.message()}"
+            )
             return null
         }
 
@@ -73,8 +70,7 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
      * Adds crypto to favorite_cryptos database table
      */
     override suspend fun addToFavorites(crypto: Crypto) {
-        val dbCrypto = crypto.toDatabase()
-        favoriteCryptoDao.insert(dbCrypto)
+        favoriteCryptoDao.insert(crypto.toDatabase())
         Log.d("MainDebug", "Added ${crypto.name} to favorites")
     }
 
@@ -139,9 +135,11 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
 
             return dbHistory.map { it.toDomain() }
         } catch (e: HttpException) {
-            Log.e("MainDebug", "HTTP error when fetching crypto history: ${e.code()} - ${e.message()}")
+            Log.e(
+                "MainDebug",
+                "HTTP error when fetching crypto history: ${e.code()} - ${e.message()}"
+            )
             return emptyList()
         }
     }
-
 }

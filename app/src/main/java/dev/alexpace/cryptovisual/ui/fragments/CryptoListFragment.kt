@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dev.alexpace.cryptovisual.databinding.FragmentCryptoListBinding
 import dev.alexpace.cryptovisual.ui.adapters.CryptoAdapter
@@ -21,9 +21,17 @@ class CryptoListFragment : Fragment() {
     // Variables and values
     private var _binding: FragmentCryptoListBinding? = null
     private val binding get() = _binding!!
-
-    private val cryptoAdapter by lazy { CryptoAdapter() }
     private val viewModel: CryptoListViewModel by viewModels { CryptoListViewModel.Factory }
+
+    // Setting up the adapter as seen in class, by passing the click listener
+    private val cryptoAdapter by lazy {
+        CryptoAdapter { crypto ->
+            val action =
+                CryptoListFragmentDirections
+                    .actionCryptoListFragmentToCryptoDetailsFragment(crypto.id)
+            findNavController().navigate(action)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,22 +103,22 @@ class CryptoListFragment : Fragment() {
      * in the ViewModel
      */
     private fun initCryptos() {
-        viewModel.cryptos.observe(viewLifecycleOwner, Observer { cryptos ->
+        viewModel.cryptos.observe(viewLifecycleOwner) { cryptos ->
             cryptoAdapter.clearCryptos()
             if (cryptos != null) {
                 cryptoAdapter.addCryptos(cryptos)
             }
-        })
+        }
 
-        viewModel.error.observe(viewLifecycleOwner, Observer { error ->
+        viewModel.error.observe(viewLifecycleOwner) { error ->
             if (!error.isNullOrEmpty()) {
                 Snackbar.make(binding.cryptoList, error, Snackbar.LENGTH_LONG).show()
             }
-        })
+        }
 
-        viewModel.loading.observe(viewLifecycleOwner, Observer { loading ->
+        viewModel.loading.observe(viewLifecycleOwner) { loading ->
             binding.progressBar.isVisible = loading
-        })
+        }
 
         if (viewModel.cryptos.value.isNullOrEmpty()) {
             viewModel.fetchCryptos()

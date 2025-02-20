@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -17,8 +16,6 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
-import dev.alexpace.cryptovisual.R
-import dev.alexpace.cryptovisual.databinding.FragmentCryptoDetailsBinding
 import dev.alexpace.cryptovisual.databinding.FragmentCryptoHistoryChartBinding
 import dev.alexpace.cryptovisual.domain.models.CryptoHistory
 import dev.alexpace.cryptovisual.ui.viewModels.CryptoHistoryChartViewModel
@@ -29,19 +26,19 @@ import java.util.Locale
 class CryptoHistoryChartFragment : Fragment() {
 
     // Arguments passed from the CryptoListFragment (navigation graph)
-    val args: CryptoHistoryChartFragmentArgs by navArgs()
+    private val args: CryptoHistoryChartFragmentArgs by navArgs()
 
     // Variables and values
     private var _binding: FragmentCryptoHistoryChartBinding? = null
     private val binding get() = _binding!!
 
-    val viewModel: CryptoHistoryChartViewModel by viewModels { CryptoHistoryChartViewModel.Factory }
+    private val viewModel: CryptoHistoryChartViewModel by viewModels { CryptoHistoryChartViewModel.Factory }
     private lateinit var lineChart: LineChart
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentCryptoHistoryChartBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -55,7 +52,6 @@ class CryptoHistoryChartFragment : Fragment() {
         initChart()
         fetchCryptoHistoryRepository(args.cryptoId)
     }
-
 
     /**
      * Initialize the chart with custom settings according to MPAndroidChart documentation
@@ -113,15 +109,13 @@ class CryptoHistoryChartFragment : Fragment() {
     private fun fetchCryptoHistoryRepository(cryptoId: String) {
         Log.d("CryptoDetailsFragment", "Testing repository for crypto ID: $cryptoId")
 
-        viewModel.getCryptoHistory(cryptoId).observe(viewLifecycleOwner, Observer { history ->
+        viewModel.getCryptoHistory(cryptoId).observe(viewLifecycleOwner) { history ->
             if (history.isNotEmpty()) {
                 Log.d("CryptoDetailsFragment", "Crypto history fetched: ${history.size} items")
                 populateChart(history)
             } else {
                 Log.d("CryptoDetailsFragment", "No crypto history found in repository.")
             }
-        })
+        }
     }
-
-
 }

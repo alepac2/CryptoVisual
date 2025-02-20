@@ -8,10 +8,12 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
-    private const val BASE_URL = "https://api.coingecko.com/api/v3/"
 
+    // Values
+    private const val BASE_URL = "https://api.coingecko.com/api/v3/"
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
 
+    // Retrofit instance
     val retrofit: Retrofit by lazy {
         val client = OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)

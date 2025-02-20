@@ -13,7 +13,7 @@ import dev.alexpace.cryptovisual.domain.models.Crypto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CryptoDetailsViewModel(private val cryptoRepository: CryptoRepository): ViewModel() {
+class CryptoDetailsViewModel(private val cryptoRepository: CryptoRepository) : ViewModel() {
 
     // Public LiveData and private MutableLiveData, for encapsulation and data protection
     private val _crypto = MutableLiveData<Crypto?>()

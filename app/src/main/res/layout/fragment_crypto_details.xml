@@ -35,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:src="@tools:sample/avatars" />
 
-    <!-- Coin Name & Symbol -->
+    <!-- Crypto name -->
     <TextView
         android:id="@+id/crypto_name"
         android:layout_width="wrap_content"
@@ -49,6 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="Bitcoin (BTC)" />
 
+    <!-- Crypto symbol -->
     <TextView
         android:id="@+id/crypto_symbol"
         android:layout_width="wrap_content"

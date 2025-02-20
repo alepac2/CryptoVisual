@@ -3,15 +3,14 @@ package dev.alexpace.cryptovisual.ui.adapters
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import dev.alexpace.cryptovisual.R
 import dev.alexpace.cryptovisual.databinding.CardCryptoBinding
 import dev.alexpace.cryptovisual.domain.models.Crypto
-import dev.alexpace.cryptovisual.ui.fragments.CryptoListFragmentDirections
 
-class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
+class CryptoAdapter(private val itemViewClickListener: (Crypto) -> Unit) :
+    RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
 
     // Variables and values
     private val cryptos = mutableListOf<Crypto>()
@@ -20,7 +19,7 @@ class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CryptoViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = CardCryptoBinding.inflate(layoutInflater, parent, false)
-        return CryptoViewHolder(binding)
+        return CryptoViewHolder(binding, itemViewClickListener)
     }
 
     /**
@@ -78,8 +77,12 @@ class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
     /**
      * ViewHolder class for the RecyclerView, binds every value to the correspondent View
      */
-    class CryptoViewHolder(private val binding: CardCryptoBinding) :
+    class CryptoViewHolder(
+        private val binding: CardCryptoBinding,
+        private val itemViewClickListener: (Crypto) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(crypto: Crypto) {
             binding.cryptoSymbol.text = crypto.symbol.uppercase()
             binding.cryptoName.text = crypto.name
@@ -93,11 +96,7 @@ class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
                 .into(binding.cryptoImage)
 
             itemView.setOnClickListener {
-                val action =
-                    CryptoListFragmentDirections.actionCryptoListFragmentToCryptoDetailsFragment(
-                        crypto.id
-                    )
-                findNavController(itemView).navigate(action)
+                itemViewClickListener(crypto)
             }
         }
     }
