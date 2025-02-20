@@ -117,23 +117,8 @@
             android:textColor="@android:color/black"
             tools:text="$50B" />
 
-        <!-- Price Change -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="24h Change:"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/crypto_change"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            tools:text="+3.5%" />
     </androidx.gridlayout.widget.GridLayout>
 
-    <!-- Placeholder for Chart -->
     <ImageView
         android:id="@+id/btnFavorite"
         android:layout_width="43dp"
