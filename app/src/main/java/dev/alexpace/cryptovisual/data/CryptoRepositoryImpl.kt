@@ -61,7 +61,7 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
         Log.d("MainDebug", "Added ${crypto.name} to favorites")
     }
 
-    override suspend fun getFavouriteCryptos(): List<Crypto>? {
+    override suspend fun getFavoriteCryptos(): List<Crypto>? {
         val favouriteCryptoListFromDb = favoriteCryptoDao.getAll()?.map {
             it.toDomain()
         }

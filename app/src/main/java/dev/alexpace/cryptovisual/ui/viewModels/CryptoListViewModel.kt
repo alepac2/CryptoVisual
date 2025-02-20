@@ -13,10 +13,10 @@ import dev.alexpace.cryptovisual.domain.models.Crypto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CryptoViewModel(private val cryptoRepository: CryptoRepository) : ViewModel() {
+class CryptoListViewModel(private val cryptoRepository: CryptoRepository) : ViewModel() {
 
-    private val _cryptos = MutableLiveData<List<Crypto>>()
-    val cryptos: LiveData<List<Crypto>> get() = _cryptos
+    private val _cryptos = MutableLiveData<List<Crypto>?>()
+    val cryptos: LiveData<List<Crypto>?> get() = _cryptos
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> get() = _loading
@@ -38,11 +38,27 @@ class CryptoViewModel(private val cryptoRepository: CryptoRepository) : ViewMode
         }
     }
 
+    fun fetchFavoriteCryptos() {
+        _loading.value = true
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val result = cryptoRepository.getFavoriteCryptos()
+                if (result != null) {
+                    _cryptos.postValue(result)
+                }
+            } catch (e: Exception) {
+                _error.postValue("An error occurred: ${e.message}")
+            } finally {
+                _loading.postValue(false)
+            }
+        }
+    }
+
     companion object {
         val Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as CryptoApplication)
-                CryptoViewModel(application.cryptoRepository)
+                CryptoListViewModel(application.cryptoRepository)
             }
         }
     }

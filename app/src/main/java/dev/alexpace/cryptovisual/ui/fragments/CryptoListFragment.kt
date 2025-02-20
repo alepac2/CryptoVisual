@@ -4,19 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import dev.alexpace.cryptovisual.R
 import dev.alexpace.cryptovisual.databinding.FragmentCryptoListBinding
 import dev.alexpace.cryptovisual.ui.adapters.CryptoAdapter
-import dev.alexpace.cryptovisual.ui.viewModels.CryptoViewModel
+import dev.alexpace.cryptovisual.ui.viewModels.CryptoListViewModel
 
 class CryptoListFragment : Fragment() {
 
@@ -24,7 +21,7 @@ class CryptoListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val cryptoAdapter by lazy { CryptoAdapter() }
-    private val viewModel: CryptoViewModel by viewModels { CryptoViewModel.Factory }
+    private val viewModel: CryptoListViewModel by viewModels { CryptoListViewModel.Factory }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,19 +41,33 @@ class CryptoListFragment : Fragment() {
         }
 
         binding.cryptoList.adapter = cryptoAdapter
+        initCryptos()
+    }
 
-        if (viewModel.cryptos.value.isNullOrEmpty()) {
-            viewModel.fetchCryptos()
+    override fun onResume() {
+        super.onResume()
 
-            viewModel.cryptos.observe(viewLifecycleOwner, Observer { cryptos ->
-                if (cryptos != null) {
-                    cryptoAdapter.addCryptos(cryptos)
-                }
-            })
+        binding.switchFavorites.setOnCheckedChangeListener { _, isChecked ->
+            cryptoAdapter.clearCryptos()
+            if (isChecked) {
+                viewModel.fetchFavoriteCryptos()
+            } else {
+                viewModel.fetchCryptos()
+            }
         }
+    }
 
+    private fun initCryptos() {
+        viewModel.cryptos.observe(viewLifecycleOwner, Observer { cryptos ->
+            cryptoAdapter.clearCryptos()
+            if (cryptos != null) {
+                cryptoAdapter.addCryptos(cryptos)
+            }
+        })
+
+        // Always observe errors and loading states.
         viewModel.error.observe(viewLifecycleOwner, Observer { error ->
-            if (error!!.isNotEmpty()) {
+            if (!error.isNullOrEmpty()) {
                 Snackbar.make(binding.cryptoList, error, Snackbar.LENGTH_LONG).show()
             }
         })
@@ -64,7 +75,13 @@ class CryptoListFragment : Fragment() {
         viewModel.loading.observe(viewLifecycleOwner, Observer { loading ->
             binding.progressBar.isVisible = loading
         })
+
+        // Trigger initial load
+        if (viewModel.cryptos.value.isNullOrEmpty()) {
+            viewModel.fetchCryptos()
+        }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

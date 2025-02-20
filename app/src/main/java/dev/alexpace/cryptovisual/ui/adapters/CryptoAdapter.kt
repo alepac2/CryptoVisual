@@ -1,5 +1,6 @@
 package dev.alexpace.cryptovisual.ui.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -31,6 +32,12 @@ class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
     fun addCryptos(cryptoList: List<Crypto>) {
         cryptos.addAll(cryptoList)
         notifyItemRangeInserted(0, cryptoList.size)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun clearCryptos() {
+        cryptos.clear()
+        notifyDataSetChanged()
     }
 
     class CryptoViewHolder(private val binding: CardCryptoBinding) : RecyclerView.ViewHolder(binding.root) {

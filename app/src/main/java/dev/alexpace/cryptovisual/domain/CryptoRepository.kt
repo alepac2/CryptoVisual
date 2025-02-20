@@ -12,7 +12,7 @@ interface CryptoRepository {
 
     // Favourite cryptos
     suspend fun addToFavorites(crypto: Crypto)
-    suspend fun getFavouriteCryptos(): List<Crypto>?
+    suspend fun getFavoriteCryptos(): List<Crypto>?
     suspend fun getFavoriteCryptoById(id: String): Crypto?
     fun isCryptoFavorite(cryptoId: String): LiveData<Boolean>
     suspend fun removeFromFavorites(cryptoId: String)
