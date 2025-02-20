@@ -57,6 +57,12 @@ class CryptoListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        if (binding.switchFavorites.isChecked) {
+            viewModel.fetchFavoriteCryptos()
+        } else {
+            viewModel.fetchCryptos()
+        }
+
         binding.switchFavorites.setOnCheckedChangeListener { _, isChecked ->
             cryptoAdapter.clearCryptos()
             if (isChecked) {
