@@ -21,6 +21,14 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
      * Fetch cryptos from the API and insert them into the database
      */
     override suspend fun getCryptos(): List<Crypto> {
+
+        val cryptosFromDb = cryptoDao.getAll()
+        if (cryptosFromDb.isNotEmpty()) {
+            return cryptosFromDb.map {
+                it.toDomain()
+            }
+        }
+
         try {
             val dbEntities = apiService.getCryptos().map {
                 it.toDatabase()
