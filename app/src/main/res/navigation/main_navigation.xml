@@ -23,5 +23,18 @@
             android:name="crypto_id"
             app:argType="string"
             android:defaultValue="not_found" />
+        <action
+            android:id="@+id/action_cryptoDetailsFragment_to_cryptoHistoryChartFragment"
+            app:destination="@id/cryptoHistoryChartFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cryptoHistoryChartFragment"
+        android:name="dev.alexpace.cryptovisual.ui.fragments.CryptoHistoryChartFragment"
+        android:label="fragment_crypto_history_chart"
+        tools:layout="@layout/fragment_crypto_history_chart" >
+        <argument
+            android:name="crypto_id"
+            app:argType="string"
+            android:defaultValue="not_found" />
     </fragment>
 </navigation>

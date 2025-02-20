@@ -10,7 +10,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import dev.alexpace.cryptovisual.CryptoApplication
 import dev.alexpace.cryptovisual.domain.CryptoRepository
 import dev.alexpace.cryptovisual.domain.models.Crypto
-import dev.alexpace.cryptovisual.domain.models.CryptoHistory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -70,23 +69,6 @@ class CryptoDetailsViewModel(private val cryptoRepository: CryptoRepository): Vi
      */
     fun isCryptoFavorite(cryptoId: String): LiveData<Boolean> {
         return cryptoRepository.isCryptoFavorite(cryptoId)
-    }
-
-    /**
-     * TODO: Not implemented yet
-     * Fetch crypto history from the repository and update the LiveData
-     */
-    fun getCryptoHistory(cryptoId: String): LiveData<List<CryptoHistory>> {
-        val historyLiveData = MutableLiveData<List<CryptoHistory>>()
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val history = cryptoRepository.getCryptoHistory(cryptoId)
-                historyLiveData.postValue(history)
-            } catch (e: Exception) {
-                _error.postValue("An error occurred while fetching crypto history: ${e.message}")
-            }
-        }
-        return historyLiveData
     }
 
     /**

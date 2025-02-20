@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
@@ -54,7 +55,6 @@ class CryptoDetailsFragment : Fragment() {
 
         initCrypto()
         initListeners()
-        testCryptoHistoryRepository(cryptoId = args.cryptoId)
     }
 
     private var isFavorite = false
@@ -104,6 +104,14 @@ class CryptoDetailsFragment : Fragment() {
                 addCryptoToFavorites()
             }
         }
+
+        binding.btnChart.setOnClickListener {
+            val action =
+                CryptoDetailsFragmentDirections.actionCryptoDetailsFragmentToCryptoHistoryChartFragment(
+                    args.cryptoId
+                )
+            findNavController(binding.btnChart).navigate(action)
+        }
     }
 
     /**
@@ -140,25 +148,6 @@ class CryptoDetailsFragment : Fragment() {
         binding.cryptoPrice.text = crypto.currentPrice.toString()
         binding.cryptoMarketCap.text = crypto.marketCap.toString()
         binding.cryptoVolume.text = crypto.totalVolume.toString()
-    }
-
-
-
-
-    //! TEMPORARY
-    private fun testCryptoHistoryRepository(cryptoId: String) {
-        Log.d("CryptoDetailsFragment", "Testing repository for crypto ID: $cryptoId")
-
-        viewModel.getCryptoHistory(cryptoId).observe(viewLifecycleOwner, Observer { history ->
-            if (history.isNotEmpty()) {
-                Log.d("CryptoDetailsFragment", "Crypto history fetched: ${history.size} items")
-                history.forEach { entry ->
-                    Log.d("CryptoDetailsFragment", "Timestamp: ${entry.timestamp}, Price: ${entry.price}")
-                }
-            } else {
-                Log.d("CryptoDetailsFragment", "No crypto history found in repository.")
-            }
-        })
     }
 
 }
