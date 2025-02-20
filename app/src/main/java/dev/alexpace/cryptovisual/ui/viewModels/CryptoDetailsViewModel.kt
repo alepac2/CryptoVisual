@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 
 class CryptoDetailsViewModel(private val cryptoRepository: CryptoRepository): ViewModel() {
 
+    // Public LiveData and private MutableLiveData, for encapsulation and data protection
     private val _crypto = MutableLiveData<Crypto?>()
     val crypto: LiveData<Crypto?> get() = _crypto
 
@@ -25,6 +26,9 @@ class CryptoDetailsViewModel(private val cryptoRepository: CryptoRepository): Vi
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
 
+    /**
+     * Fetch crypto by id from the repository and update the LiveData.
+     */
     fun fetchCryptoById(id: String) {
         _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
@@ -39,6 +43,9 @@ class CryptoDetailsViewModel(private val cryptoRepository: CryptoRepository): Vi
         }
     }
 
+    /**
+     * Adds cryptos to favorite_cryptos database table by calling the repository
+     */
     fun addCryptoToFavorites(cryptoId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val crypto = cryptoRepository.getCryptoById(cryptoId)
@@ -47,16 +54,28 @@ class CryptoDetailsViewModel(private val cryptoRepository: CryptoRepository): Vi
         }
     }
 
+    /**
+     * Removes cryptos from favorite_cryptos database table by calling the repository
+     */
     fun removeCryptoFromFavorites(cryptoId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             cryptoRepository.removeFromFavorites(cryptoId)
         }
     }
 
+    /**
+     * Checks whether a crypto is in the favorite_cryptos database table or not.
+     * Used for checking or unchecking the favorite star button in the view when
+     * accessing the details fragment
+     */
     fun isCryptoFavorite(cryptoId: String): LiveData<Boolean> {
         return cryptoRepository.isCryptoFavorite(cryptoId)
     }
 
+    /**
+     * TODO: Not implemented yet
+     * Fetch crypto history from the repository and update the LiveData
+     */
     fun getCryptoHistory(cryptoId: String): LiveData<List<CryptoHistory>> {
         val historyLiveData = MutableLiveData<List<CryptoHistory>>()
         viewModelScope.launch(Dispatchers.IO) {
@@ -70,6 +89,9 @@ class CryptoDetailsViewModel(private val cryptoRepository: CryptoRepository): Vi
         return historyLiveData
     }
 
+    /**
+     * Factory for creating instances of CryptoDetailsViewModel
+     */
     companion object {
         val Factory = viewModelFactory {
             initializer {

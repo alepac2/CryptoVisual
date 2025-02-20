@@ -23,8 +23,10 @@ import dev.alexpace.cryptovisual.ui.viewModels.CryptoDetailsViewModel
 
 class CryptoDetailsFragment : Fragment() {
 
+    // Arguments passed from the CryptoListFragment (navigation graph)
     val args: CryptoDetailsFragmentArgs by navArgs()
 
+    // Variables and values
     private var _binding: FragmentCryptoDetailsBinding? = null
     private val binding get() = _binding!!
 
@@ -38,6 +40,9 @@ class CryptoDetailsFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Initialize most of the logic when the view has already been created
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -54,6 +59,10 @@ class CryptoDetailsFragment : Fragment() {
 
     private var isFavorite = false
 
+    /**
+     * Fetches the crypto from its ID (separation of concerns) and observes the changes
+     * in the ViewModel
+     */
     private fun initCrypto() {
         val cryptoId = args.cryptoId
 
@@ -83,6 +92,9 @@ class CryptoDetailsFragment : Fragment() {
 
     }
 
+    /**
+     * Initializes listeners for the favorite star button
+     */
     private fun initListeners() {
         binding.btnFavorite.setOnClickListener {
             val cryptoId = args.cryptoId
@@ -94,16 +106,27 @@ class CryptoDetailsFragment : Fragment() {
         }
     }
 
+    /**
+     * Calls the viewModels addCryptoToFavorites method, to insert the cryptos into the
+     * favorite_cryptos database table
+     */
     private fun addCryptoToFavorites() {
         val cryptoId = args.cryptoId
         viewModel.addCryptoToFavorites(cryptoId)
     }
 
+    /**
+     * Calls the viewModels removeCryptoFromFavorites method, to delete the cryptos from the
+     * favorite_cryptos database table
+     */
     private fun removeCryptoFromFavorites() {
         val cryptoId = args.cryptoId
         viewModel.removeCryptoFromFavorites(cryptoId)
     }
 
+    /**
+     * Assign the crypto details to the UI elements from the Crypto object
+     */
     @SuppressLint("SetTextI18n")
     private fun assignCryptoDetails(crypto: Crypto) {
         Glide.with(binding.root.context)

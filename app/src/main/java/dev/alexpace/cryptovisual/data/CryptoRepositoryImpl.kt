@@ -17,6 +17,9 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
     private val favoriteCryptoDao = db.favoriteCryptoDao()
     private val cryptoHistoryDao = db.cryptoHistoryDao()
 
+    /**
+     * Fetch cryptos from the API and insert them into the database
+     */
     override suspend fun getCryptos(): List<Crypto> {
         try {
             val dbEntities = apiService.getCryptos().map {
@@ -34,6 +37,9 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
         }
     }
 
+    /**
+     * Fetch crypto by id from the API and insert it into the database if not found
+     */
     override suspend fun getCryptoById(id: String): Crypto? {
 
         // Try to retrieve it from db
@@ -55,12 +61,18 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
         return dbCrypto.toDomain()
     }
 
+    /**
+     * Adds crypto to favorite_cryptos database table
+     */
     override suspend fun addToFavorites(crypto: Crypto) {
         val dbCrypto = crypto.toDatabase()
         favoriteCryptoDao.insert(dbCrypto)
         Log.d("MainDebug", "Added ${crypto.name} to favorites")
     }
 
+    /**
+     * Fetch favorite cryptos from the database
+     */
     override suspend fun getFavoriteCryptos(): List<Crypto>? {
         val favouriteCryptoListFromDb = favoriteCryptoDao.getAll()?.map {
             it.toDomain()
@@ -73,6 +85,9 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
         return null
     }
 
+    /**
+     * Fetch favorite crypto by id from the database
+     */
     override suspend fun getFavoriteCryptoById(id: String): Crypto? {
         val favouriteCryptoFromDb = favoriteCryptoDao.findById(id)
 
@@ -83,15 +98,24 @@ class CryptoRepositoryImpl(db: AppDatabase): CryptoRepository {
         return null
     }
 
+    /**
+     * Checks whether a crypto is in the favorite_cryptos database table or not.
+     */
     override fun isCryptoFavorite(cryptoId: String): LiveData<Boolean> {
         return favoriteCryptoDao.isCryptoFavorite(cryptoId)
     }
 
+    /**
+     * Removes crypto from favorite_cryptos database table
+     */
     override suspend fun removeFromFavorites(cryptoId: String) {
         favoriteCryptoDao.deleteById(cryptoId)
         Log.d("MainDebug", "Removed $cryptoId from favorites")
     }
 
+    /**
+     * Fetch crypto history and insert it into the database if not found
+     */
     override suspend fun getCryptoHistory(cryptoId: String): List<CryptoHistory> {
 
         val historyFromDb = cryptoHistoryDao.getCryptoHistory(cryptoId)

@@ -3,7 +3,6 @@ package dev.alexpace.cryptovisual.ui.adapters
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -14,7 +13,9 @@ import dev.alexpace.cryptovisual.ui.fragments.CryptoListFragmentDirections
 
 class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
 
+    // Variables and values
     private val cryptos = mutableListOf<Crypto>()
+    private var filteredCryptos = mutableListOf<Crypto>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CryptoViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -22,30 +23,63 @@ class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
         return CryptoViewHolder(binding)
     }
 
+    /**
+     * Binds the data to the view holder
+     */
     override fun onBindViewHolder(holder: CryptoViewHolder, position: Int) {
-        val crypto = cryptos[position]
+        val crypto = filteredCryptos[position]
         holder.bind(crypto)
     }
 
-    override fun getItemCount(): Int = cryptos.size
+    /**
+     * Not necessary but mandatory for RecyclerView
+     */
+    override fun getItemCount(): Int = filteredCryptos.size
 
-    fun addCryptos(cryptoList: List<Crypto>) {
-        cryptos.addAll(cryptoList)
-        notifyItemRangeInserted(0, cryptoList.size)
-    }
-
+    /**
+     * Clears totally the list and adds the new list, which can be filtered
+     */
     @SuppressLint("NotifyDataSetChanged")
-    fun clearCryptos() {
+    fun addCryptos(cryptoList: List<Crypto>) {
         cryptos.clear()
+        cryptos.addAll(cryptoList)
+        filteredCryptos = ArrayList(cryptos)
         notifyDataSetChanged()
     }
 
-    class CryptoViewHolder(private val binding: CardCryptoBinding) : RecyclerView.ViewHolder(binding.root) {
+    /**
+     * Clears all the cryptos from the list
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    fun clearCryptos() {
+        cryptos.clear()
+        filteredCryptos.clear()
+        notifyDataSetChanged()
+    }
 
-        private val cryptoImage: ImageView by lazy {
-            binding.cryptoImage
+    /**
+     * Filtering logic. Works if the Crypto's name or symbol contains the input
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    fun filter(query: String) {
+        filteredCryptos = if (query.isEmpty()) {
+            ArrayList(cryptos)
+        } else {
+            cryptos.filter {
+                it.name.contains(query, ignoreCase = true) || it.symbol.contains(
+                    query,
+                    ignoreCase = true
+                )
+            }.toMutableList()
         }
+        notifyDataSetChanged()
+    }
 
+    /**
+     * ViewHolder class for the RecyclerView, binds every value to the correspondent View
+     */
+    class CryptoViewHolder(private val binding: CardCryptoBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(crypto: Crypto) {
             binding.cryptoSymbol.text = crypto.symbol.uppercase()
             binding.cryptoName.text = crypto.name
@@ -56,10 +90,13 @@ class CryptoAdapter : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
                 .load(crypto.image)
                 .placeholder(R.drawable.ic_launcher_background)
                 .centerCrop()
-                .into(cryptoImage)
+                .into(binding.cryptoImage)
 
             itemView.setOnClickListener {
-                val action = CryptoListFragmentDirections.actionCryptoListFragmentToCryptoDetailsFragment(crypto.id)
+                val action =
+                    CryptoListFragmentDirections.actionCryptoListFragmentToCryptoDetailsFragment(
+                        crypto.id
+                    )
                 findNavController(itemView).navigate(action)
             }
         }

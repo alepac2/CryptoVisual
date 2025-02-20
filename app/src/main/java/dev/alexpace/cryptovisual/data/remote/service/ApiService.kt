@@ -7,6 +7,8 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
+
+    // For all cryptos (Max. 250)
     @GET("coins/markets")
     suspend fun getCryptos(
         @Query("vs_currency") currency: String = "usd",
@@ -16,11 +18,13 @@ interface ApiService {
         @Query("sparkline") sparkline: Boolean = false
     ): List<CryptoResponse>
 
+    // For cryptos by ID
     @GET("coins/{id}")
     suspend fun getCryptoById(
         @Path("id") id: String
     ): CryptoResponse
 
+    // For crypto history
     @GET("coins/{id}/market_chart")
     suspend fun getCryptoHistory(
         @Path("id") id: String,

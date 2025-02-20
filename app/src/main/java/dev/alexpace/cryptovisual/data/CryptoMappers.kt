@@ -66,10 +66,10 @@ fun CryptoHistoryResponse.toDatabase(cryptoId: String): List<CryptoHistoryEntity
     return this.prices.mapIndexed { index, priceEntry ->
         CryptoHistoryEntity(
             cryptoId = cryptoId,
-            timestamp = (priceEntry[0] * 1000).toLong(),  // Convert timestamp from seconds to milliseconds
-            price = priceEntry[1],  // price from the "prices" list
-            marketCap = this.marketCaps[index][1],  // Market cap from the "market_caps" list
-            totalVolume = this.totalVolumes[index][1]  // Total volume from the "total_volumes" list
+            timestamp = (priceEntry[0] * 1000).toLong(),
+            price = priceEntry[1],
+            marketCap = this.marketCaps[index][1],
+            totalVolume = this.totalVolumes[index][1]
         )
     }
 }

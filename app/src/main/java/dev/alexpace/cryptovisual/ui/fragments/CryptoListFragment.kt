@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -17,6 +18,7 @@ import dev.alexpace.cryptovisual.ui.viewModels.CryptoListViewModel
 
 class CryptoListFragment : Fragment() {
 
+    // Variables and values
     private var _binding: FragmentCryptoListBinding? = null
     private val binding get() = _binding!!
 
@@ -31,6 +33,9 @@ class CryptoListFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * When the view has already been created, we set the adapter and initialize
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -42,8 +47,13 @@ class CryptoListFragment : Fragment() {
 
         binding.cryptoList.adapter = cryptoAdapter
         initCryptos()
+        initListeners()
     }
 
+    /**
+     * When we go back to the Fragment after clicking the back button, from the
+     * Details Fragment
+     */
     override fun onResume() {
         super.onResume()
 
@@ -57,6 +67,27 @@ class CryptoListFragment : Fragment() {
         }
     }
 
+    /**
+     * Initialize searchBar listener. Submit returns false, change returns true,
+     * as we don't want to submit
+     */
+    private fun initListeners() {
+        binding.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                cryptoAdapter.filter(newText.orEmpty())
+                return true
+            }
+        })
+    }
+
+    /**
+     * Initializing cryptos with Observers, like a hook for when the data changes
+     * in the ViewModel
+     */
     private fun initCryptos() {
         viewModel.cryptos.observe(viewLifecycleOwner, Observer { cryptos ->
             cryptoAdapter.clearCryptos()
@@ -65,7 +96,6 @@ class CryptoListFragment : Fragment() {
             }
         })
 
-        // Always observe errors and loading states.
         viewModel.error.observe(viewLifecycleOwner, Observer { error ->
             if (!error.isNullOrEmpty()) {
                 Snackbar.make(binding.cryptoList, error, Snackbar.LENGTH_LONG).show()
@@ -76,13 +106,14 @@ class CryptoListFragment : Fragment() {
             binding.progressBar.isVisible = loading
         })
 
-        // Trigger initial load
         if (viewModel.cryptos.value.isNullOrEmpty()) {
             viewModel.fetchCryptos()
         }
     }
 
-
+    /**
+     * When the view is destroyed, we set the binding to null (good practice?)
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

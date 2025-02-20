@@ -15,6 +15,8 @@ import kotlinx.coroutines.launch
 
 class CryptoListViewModel(private val cryptoRepository: CryptoRepository) : ViewModel() {
 
+    // Public LiveData and private MutableLiveData, for encapsulation and data protection
+    // (good practice)
     private val _cryptos = MutableLiveData<List<Crypto>?>()
     val cryptos: LiveData<List<Crypto>?> get() = _cryptos
 
@@ -24,6 +26,9 @@ class CryptoListViewModel(private val cryptoRepository: CryptoRepository) : View
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
 
+    /**
+     * Fetch cryptos from the repository and update the LiveData.
+     */
     fun fetchCryptos() {
         _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
@@ -38,6 +43,9 @@ class CryptoListViewModel(private val cryptoRepository: CryptoRepository) : View
         }
     }
 
+    /**
+     * Fetch favorite cryptos from the repository and update the same LiveData.
+     */
     fun fetchFavoriteCryptos() {
         _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
@@ -54,6 +62,9 @@ class CryptoListViewModel(private val cryptoRepository: CryptoRepository) : View
         }
     }
 
+    /**
+     * Factory for creating instances of CryptoListViewModel.
+     */
     companion object {
         val Factory = viewModelFactory {
             initializer {

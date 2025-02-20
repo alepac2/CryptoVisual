@@ -10,8 +10,12 @@ import dev.alexpace.cryptovisual.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    // Binding
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
+    /**
+     * Initializes the activity and declares the navigation controller
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -24,6 +28,9 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController)
     }
 
+    /**
+     * Necessary for the back button to work
+     */
     override fun onSupportNavigateUp(): Boolean {
         val navController =
             (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment)
