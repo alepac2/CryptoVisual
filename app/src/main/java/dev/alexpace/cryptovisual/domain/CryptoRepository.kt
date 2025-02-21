@@ -19,5 +19,8 @@ interface CryptoRepository {
 
     // Crypto history
     suspend fun getCryptoHistory(cryptoId: String): List<CryptoHistory>
+    suspend fun getCryptoHistoryByDateRange(
+        cryptoId: String, dateStart: Long, dateEnd: Long
+    ): List<CryptoHistory>
 
 }

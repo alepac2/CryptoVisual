@@ -129,8 +129,8 @@ class CryptoRepositoryImpl(db: AppDatabase) : CryptoRepository {
 
         try {
             val historyFromApi = apiService.getCryptoHistory(cryptoId)
-            val dbHistory = historyFromApi.toDatabase(cryptoId)
 
+            val dbHistory = historyFromApi.toDatabase(cryptoId)
             cryptoHistoryDao.insertAll(dbHistory)
 
             return dbHistory.map { it.toDomain() }
@@ -138,6 +138,28 @@ class CryptoRepositoryImpl(db: AppDatabase) : CryptoRepository {
             Log.e(
                 "MainDebug",
                 "HTTP error when fetching crypto history: ${e.code()} - ${e.message()}"
+            )
+            return emptyList()
+        }
+    }
+
+    /**
+     * Fetch crypto history by date range exclusively from the API
+     */
+    override suspend fun getCryptoHistoryByDateRange(
+        cryptoId: String, dateStart: Long, dateEnd: Long
+    ): List<CryptoHistory> {
+
+        try {
+            val historyFromApi = apiService
+                .getCryptoHistoryByDateRange(cryptoId, dateStart, dateEnd)
+
+            return historyFromApi.toDatabase(cryptoId).map { it.toDomain() }
+        } catch (e: HttpException) {
+            Log.e(
+                "MainDebug",
+                "HTTP error when fetching crypto history by date range: " +
+                        "${e.code()} - ${e.message()}"
             )
             return emptyList()
         }

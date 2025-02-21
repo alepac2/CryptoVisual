@@ -37,4 +37,15 @@ interface ApiService {
         @Query("vs_currency") currency: String = "usd",
         @Query("days") days: Int = 30
     ): CryptoHistoryResponse
+
+    /**
+     * For a specific crypto's history by date range
+     */
+    @GET("coins/{id}/market_chart/range")
+    suspend fun getCryptoHistoryByDateRange(
+        @Path("id") id: String,
+        @Query("from") dateStart: Long,
+        @Query("to") dateEnd: Long,
+        @Query("vs_currency") currency: String = "usd"
+    ): CryptoHistoryResponse
 }

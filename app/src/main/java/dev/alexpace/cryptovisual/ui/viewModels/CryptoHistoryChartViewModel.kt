@@ -30,6 +30,7 @@ class CryptoHistoryChartViewModel(private val cryptoRepository: CryptoRepository
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val history = cryptoRepository.getCryptoHistory(cryptoId)
+
                 historyLiveData.postValue(history)
             } catch (e: Exception) {
                 _error.postValue(
@@ -38,6 +39,38 @@ class CryptoHistoryChartViewModel(private val cryptoRepository: CryptoRepository
             }
         }
         return historyLiveData
+    }
+
+    fun getCryptoHistoryByDateRange(
+        cryptoId: String, dateStart: String, dateEnd: String
+    ): LiveData<List<CryptoHistory>> {
+        val historyLiveData = MutableLiveData<List<CryptoHistory>>()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val history: List<CryptoHistory> = if (checkDateRange(dateStart, dateEnd)) {
+                    cryptoRepository
+                        .getCryptoHistoryByDateRange(
+                            cryptoId, dateStart.toLong(), dateEnd.toLong()
+                        )
+                } else {
+                    cryptoRepository.getCryptoHistory(cryptoId)
+                }
+                historyLiveData.postValue(history)
+            } catch (e: Exception) {
+                _error.postValue(
+                    "An error occurred while fetching crypto history: ${e.message}"
+                )
+            }
+        }
+        return historyLiveData
+    }
+
+    private fun checkDateRange(dateStart: String, dateEnd: String): Boolean {
+        val dateStartLong = dateStart.toLongOrNull()
+        val dateEndLong = dateEnd.toLongOrNull()
+        return dateStartLong != null && dateEndLong != null && dateStartLong < dateEndLong
     }
 
     /**
