@@ -32,14 +32,17 @@ class CryptoHistoryChartFragment : Fragment() {
     private var _binding: FragmentCryptoHistoryChartBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: CryptoHistoryChartViewModel by viewModels { CryptoHistoryChartViewModel.Factory }
+    private val viewModel: CryptoHistoryChartViewModel by viewModels {
+        CryptoHistoryChartViewModel.Factory
+    }
     private lateinit var lineChart: LineChart
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentCryptoHistoryChartBinding.inflate(inflater, container, false)
+        _binding = FragmentCryptoHistoryChartBinding
+            .inflate(inflater, container, false)
         return binding.root
     }
 
@@ -71,7 +74,9 @@ class CryptoHistoryChartFragment : Fragment() {
                 granularity = 86400f // One day (Unix time in seconds)
                 valueFormatter = object : ValueFormatter() {
                     @SuppressLint("ConstantLocale")
-                    private val dateFormat = SimpleDateFormat("dd MMM", Locale.getDefault())
+                    private val dateFormat = SimpleDateFormat(
+                        "dd MMM", Locale.getDefault()
+                    )
                     override fun getFormattedValue(value: Float): String {
                         return dateFormat.format(Date(value.toLong() * 1000))
                     }
@@ -111,10 +116,16 @@ class CryptoHistoryChartFragment : Fragment() {
 
         viewModel.getCryptoHistory(cryptoId).observe(viewLifecycleOwner) { history ->
             if (history.isNotEmpty()) {
-                Log.d("CryptoDetailsFragment", "Crypto history fetched: ${history.size} items")
+                Log.d(
+                    "CryptoDetailsFragment",
+                    "Crypto history fetched: ${history.size} items"
+                )
                 populateChart(history)
             } else {
-                Log.d("CryptoDetailsFragment", "No crypto history found in repository.")
+                Log.d(
+                    "CryptoDetailsFragment",
+                    "No crypto history found in repository."
+                )
             }
         }
     }
